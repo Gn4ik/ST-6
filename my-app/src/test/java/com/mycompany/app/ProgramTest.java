@@ -9,9 +9,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class ProgramTest {
-    
     private TicTacToePanel panel;
-
     @BeforeEach
     public void setUp() {
         SwingUtilities.invokeLater(() -> {
