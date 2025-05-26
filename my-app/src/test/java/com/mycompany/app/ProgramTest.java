@@ -1,11 +1,67 @@
 package com.mycompany.app;
 
+import org.junit.jupiter.api.BeforeEach;
+import javax.swing.SwingUtilities;
+import java.awt.GridLayout;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 public class ProgramTest {
+    
+    private TicTacToePanel panel;
+
+    @BeforeEach
+    public void setUp() {
+        SwingUtilities.invokeLater(() -> {
+            panel = new TicTacToePanel(new GridLayout(3, 3));
+        });
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGameBoardUpdatesOnClick() {
+        TicTacToeCell cell = (TicTacToeCell) panel.getComponent(0);
+        assertEquals(' ', cell.getMarker());
+        cell.doClick();
+        assertNotEquals(' ', cell.getMarker());
+    }
+
+    @Test
+    public void testGameEndsInDraw() {
+        Game game = new Game();
+        game.board = new char[]{
+                'X','O','X',
+                'X','O','O',
+                'O','X','X'
+        };
+        assertEquals(State.DRAW, game.checkState(game.board));
+    }
+
+    @Test
+    public void testGameRecognizesXWin() {
+        Game game = new Game();
+        game.symbol = 'X';
+        game.board = new char[]{
+                'X','X','X',
+                'O','O',' ',
+                ' ',' ',' '
+        };
+        assertEquals(State.XWIN, game.checkState(game.board));
+    }
+
+    @Test
+    public void testCellDisablesAfterClick() {
+        TicTacToeCell cell = new TicTacToeCell(0, 0, 0);
+        cell.setMarker("X");
+        assertFalse(cell.isEnabled());
+    }
     @Test
     public void testInitialStateIsPlaying() {
         Game game = new Game();
